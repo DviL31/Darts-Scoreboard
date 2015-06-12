@@ -14,4 +14,10 @@ public class DartboardTest extends TestCase {
         Dartboard dartboard = new Dartboard();
         assertEquals("Dartboard", dartboard.getClass().getSimpleName());
     }
+
+    @Test
+    public void testNewPartyIsNotEnded() {
+        CricketScoreboard cricketScoreboard = new CricketScoreboard();
+        assertFalse(cricketScoreboard.isPartyEnded());
+    }
 }
