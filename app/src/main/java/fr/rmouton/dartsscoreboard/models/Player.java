@@ -6,6 +6,8 @@ package fr.rmouton.dartsscoreboard.models;
  */
 public class Player {
 
+    private static final String DEFAULT_PLAYER_NAME = "Player ";
+
     /**
      * A unique id player
      */
@@ -15,4 +17,19 @@ public class Player {
      * Player's name
      */
     public String name;
+
+    public Player() {
+        id = 1;
+        name = DEFAULT_PLAYER_NAME + id;
+    }
+
+    public Player(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -6,7 +6,6 @@ package fr.rmouton.dartsscoreboard.models;
  */
 public enum Section {
 
-    BULL(0),
     ONE(1),
     TWO(2),
     THREE(3),
@@ -26,7 +25,8 @@ public enum Section {
     SEVENTEEN(17),
     EIGHTEEN(18),
     NINETEEN(19),
-    TWENTY(20);
+    TWENTY(20),
+    BULL(25);
 
     /**
      * The number of point of this section
@@ -41,7 +41,7 @@ public enum Section {
      * @return The name of the section
      */
     String label() {
-        if (value == 0)
+        if (value == 25)
             return "Bull";
         return String.valueOf(value);
     }

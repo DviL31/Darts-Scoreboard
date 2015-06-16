@@ -1,8 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'de.mobilej.unmock'
 
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 
     defaultConfig {
         applicationId "fr.rmouton.dartsscoreboard"
@@ -19,6 +24,15 @@ android {
     }
 }
 
+unMock {
+    // URI to download the android-all.jar from. e.g. https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/
+    downloadFrom 'https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/4.3_r2-robolectric-0/android-all-4.3_r2-robolectric-0.jar'
+
+    keepStartingWith "android.util.SparseArray"
+    keepStartingWith "android.util.SparseIntArray"
+    keepStartingWith "com.android.internal.R"
+    keepStartingWith "com.android.internal.util."
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'

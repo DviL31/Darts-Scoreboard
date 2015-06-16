@@ -27,8 +27,8 @@ public abstract class Scoreboard {
         }
     }
 
-    public Player getPlayer(int id) {
-        return players.get(id);
+    public Player getPlayer(int playerId) {
+        return players.get(playerId);
     }
 
     /**
@@ -37,6 +37,15 @@ public abstract class Scoreboard {
      * @param section The section hit.
      */
     public void hit(Player player, Section section) {
+        hit(player, section, 1);
+    }
+
+    /**
+     * The player hit a section count times.
+     *
+     * @param section The section hit.
+     */
+    public void hit(Player player, Section section, int count) {
 
     }
 

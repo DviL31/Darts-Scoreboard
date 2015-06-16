@@ -5,7 +5,6 @@ import android.util.SparseIntArray;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The cricket scoreboard.
@@ -18,6 +17,8 @@ public class CricketScoreboard extends Scoreboard {
      */
     private static final int MAX_HIT_BY_SECTION = 3;
 
+    private static final Section[] WINNING_SECTIONS = {Section.TWENTY, Section.NINETEEN,
+            Section.EIGHTEEN, Section.SEVENTEEN, Section.SIXTEEN, Section.FIVETEEN, Section.BULL};
     /**
      * Cut-throat style scoring can be used, in which case points are undesirable;
      * hitting a number that is opened results in points being given to any other players who do
@@ -43,6 +44,14 @@ public class CricketScoreboard extends Scoreboard {
         hitSections = new SparseArray<>(players.size());
     }
 
+    public void setCutThroat(boolean cutThroat) {
+        this.cutThroat = cutThroat;
+    }
+
+    public boolean isCutThroat() {
+        return cutThroat;
+    }
+
     /**
      * Check the current party status.
      *
@@ -54,49 +63,60 @@ public class CricketScoreboard extends Scoreboard {
 
     /**
      * Verify if we have a winner.
+     *
      * @return the winner is exists, null otherwise
      */
     public Player getWinner() {
         for (int i = 0; i < hitSections.size(); i++) {
-            HashMap<Section, Integer> hitSection = hitSections.get(i);
+            int playerId = hitSections.keyAt(i);
+            HashMap<Section, Integer> hitSection = hitSections.get(playerId);
 
-            boolean allHit = true;
-            for (Map.Entry<Section, Integer> entry : hitSection.entrySet()) {
-                if (entry.getValue() != MAX_HIT_BY_SECTION) {
-                    allHit = false;
-                    break;
+            // At least one hit
+            if (hitSection != null) {
+                boolean allHit = true;
+                for (Section section : WINNING_SECTIONS) {
+                    Integer countSection = hitSection.get(section);
+                    if (countSection == null || countSection.intValue() != MAX_HIT_BY_SECTION) {
+                        allHit = false;
+                        break;
+                    }
                 }
-            }
 
-            // This player hit all section 3 times
-            if (allHit) {
-                if (scores.get(i) == maxScore())
-                    return getPlayer(i);
+                // This player hit all section 3 times
+                if (allHit) {
+                    Player player = getPlayer(playerId);
+                    if (getScore(player) == maxScore()) {
+                        return player;
+                    }
+                }
             }
         }
 
         return null;
     }
 
+    public int getScore(Player player) {
+        return scores != null ? scores.get(player.id) : 0;
+    }
+
     public int maxScore() {
-        int maxScore = scores.get(0);
-        for (int i = 1; i < scores.size(); i++) {
-            if (scores.get(i) > maxScore)
-                maxScore = scores.get(i);
+        int maxScore = 0;
+        for (int i = 0; i < scores.size(); i++) {
+            if (scores.valueAt(i) > maxScore)
+                maxScore = scores.valueAt(i);
         }
         return maxScore;
     }
 
     @Override
-    public void hit(Player player, Section section) {
-        super.hit(player, section);
+    public void hit(Player player, Section section, int count) {
+        super.hit(player, section, count);
 
         HashMap<Section, Integer> playerHitSections = hitSections.get(player.id);
 
         // first hit ?
         if (playerHitSections == null) {
             playerHitSections = new HashMap<>(7);
-            hitSections.put(player.id, playerHitSections);
         }
 
         // first hit in this section ?
@@ -104,16 +124,22 @@ public class CricketScoreboard extends Scoreboard {
             playerHitSections.put(section, 0);
         }
 
-        // hit the section
-        int currentSectionHit = playerHitSections.get(section);
+        for (int i = 0; i < count; i++) {
 
-        // Section already closed
-        if (currentSectionHit == MAX_HIT_BY_SECTION) {
-            // TODO try to score
-        } // one more hit
-        else {
-            playerHitSections.put(section, currentSectionHit + 1);
+            // current hits for thius section
+            int currentSectionHit = playerHitSections.get(section);
+
+            // Section already closed
+            if (currentSectionHit == MAX_HIT_BY_SECTION) {
+                int currentScore = scores.get(player.id);
+                scores.put(player.id, currentScore + section.value);
+            } // one more hit
+            else {
+                playerHitSections.put(section, currentSectionHit + 1);
+            }
         }
+
+        hitSections.put(player.id, playerHitSections);
 
         // Do we have a winner
         Player winner = getWinner();

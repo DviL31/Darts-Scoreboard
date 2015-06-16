@@ -6,5 +6,17 @@ package fr.rmouton.dartsscoreboard.models;
  */
 public class X01Scoreboard {
 
+    enum Type {
 
+        X301,
+        X501,
+        X701,
+        X1001;
+    }
+
+    public Type type;
+
+    public X01Scoreboard(Type type) {
+        this.type = type;
+    }
 }
