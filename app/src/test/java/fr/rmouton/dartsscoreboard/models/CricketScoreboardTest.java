@@ -110,7 +110,27 @@ public class CricketScoreboardTest extends TestCase {
         assertEquals(cricketScoreboard.getScore(rabbit), 0);
         assertEquals(cricketScoreboard.getWinner(), duck);
         assertNotSame(cricketScoreboard.getWinner(), rabbit);
+    }
 
+    @Test
+    public void testAllSectionsClosedButNoHighScore() {
+        Player duck = new Player(1, "Duck");
+        Player rabbit = new Player(2, "Rabbit");
+        List<Player> players = Arrays.asList(duck, rabbit);
+        CricketScoreboard cricketScoreboard = new CricketScoreboard(players);
+
+        cricketScoreboard.hit(rabbit, Section.TWENTY, 4); // 20 points !
+        cricketScoreboard.hit(duck, Section.TWENTY, 3);
+        cricketScoreboard.hit(duck, Section.NINETEEN, 3);
+        cricketScoreboard.hit(duck, Section.EIGHTEEN, 3);
+        cricketScoreboard.hit(duck, Section.SEVENTEEN, 3);
+        cricketScoreboard.hit(duck, Section.SIXTEEN, 3);
+        cricketScoreboard.hit(duck, Section.FIVETEEN, 3);
+        cricketScoreboard.hit(duck, Section.BULL, 3);
+
+        assertEquals(cricketScoreboard.getScore(duck), 0);
+        assertEquals(cricketScoreboard.getScore(rabbit), 20);
+        assertNull(cricketScoreboard.getWinner());
     }
 
     @Test
@@ -119,5 +139,37 @@ public class CricketScoreboardTest extends TestCase {
         assertFalse(cricketScoreboard.isCutThroat());
         cricketScoreboard.setCutThroat(true);
         assertTrue(cricketScoreboard.isCutThroat());
+    }
+
+    @Test
+    public void testCutThroatScore() {
+        Player duck = new Player(1, "Duck");
+        Player rabbit = new Player(2, "Rabbit");
+        Player pig = new Player(3, "Pig");
+        List<Player> players = Arrays.asList(duck, rabbit, pig);
+        CricketScoreboard cricketScoreboard = new CricketScoreboard(players);
+        cricketScoreboard.setCutThroat(true);
+
+        cricketScoreboard.hit(duck, Section.TWENTY, 3);
+        cricketScoreboard.hit(duck, Section.NINETEEN, 3);
+        cricketScoreboard.hit(duck, Section.EIGHTEEN, 3);
+        cricketScoreboard.hit(duck, Section.SEVENTEEN, 3);
+        cricketScoreboard.hit(duck, Section.SIXTEEN, 3);
+        cricketScoreboard.hit(duck, Section.FIVETEEN, 3);
+        cricketScoreboard.hit(duck, Section.BULL, 4);
+
+        // score 2 players
+        assertEquals(cricketScoreboard.maxScore(), 25);
+        assertEquals(cricketScoreboard.getScore(duck), 0);
+        assertEquals(cricketScoreboard.getScore(rabbit), 25);
+        assertEquals(cricketScoreboard.getScore(pig), 25);
+
+        // score 1 player
+        cricketScoreboard.hit(rabbit, Section.BULL, 5);
+        assertEquals(cricketScoreboard.maxScore(), 75);
+        assertEquals(cricketScoreboard.getScore(duck), 0);
+        assertEquals(cricketScoreboard.getScore(rabbit), 25);
+        assertEquals(cricketScoreboard.getScore(pig), 75);
+
     }
 }

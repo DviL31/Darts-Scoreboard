@@ -132,7 +132,6 @@ public class CricketScoreboard extends Scoreboard {
             // Section already closed
             if (currentSectionHit == MAX_HIT_BY_SECTION) {
 
-                // TODO cutThroat
                 boolean allPlayerHaveClosedThisSection = true;
 
                 for (int j = 0; j < players.size(); j++) {
@@ -154,8 +153,26 @@ public class CricketScoreboard extends Scoreboard {
                 // Only score if at least one player hasn't closed this section
                 if (!allPlayerHaveClosedThisSection) {
                     // score
-                    int currentScore = scores.get(player.id);
-                    scores.put(player.id, currentScore + section.value);
+                    if (cutThroat) {
+                        for (int j = 0; j < players.size(); j++) {
+                            int playerId = players.keyAt(j);
+
+                            // Do not score current player
+                            if (playerId == player.id)
+                                continue;
+
+                            if (hitSections.get(playerId) == null ||
+                                    hitSections.get(playerId).get(section) == null ||
+                                    hitSections.get(playerId).get(section).intValue() != MAX_HIT_BY_SECTION) {
+                                int currentScore = scores.get(playerId);
+                                scores.put(playerId, currentScore + section.value);
+                            }
+                        }
+                    } //classical
+                    else {
+                        int currentScore = scores.get(player.id);
+                        scores.put(player.id, currentScore + section.value);
+                    }
                 }
             } // one more hit
             else {
