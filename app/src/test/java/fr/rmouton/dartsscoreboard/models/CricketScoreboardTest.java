@@ -82,6 +82,10 @@ public class CricketScoreboardTest extends TestCase {
         assertEquals(cricketScoreboard.maxScore(), 20);
         cricketScoreboard.hit(duck, Section.BULL, 4); // 25 points !
         assertEquals(cricketScoreboard.maxScore(), 45);
+        cricketScoreboard.hit(rabbit, Section.TWENTY, 4); // A this time, all player have closed 20
+        assertEquals(cricketScoreboard.getScore(duck), 45);
+        assertEquals(cricketScoreboard.getScore(rabbit), 0);
+
 
         assertEquals(cricketScoreboard.hitSections.get(1).get(Section.TWENTY).intValue(), 3);
 
@@ -102,6 +106,8 @@ public class CricketScoreboardTest extends TestCase {
         cricketScoreboard.hit(duck, Section.FIVETEEN, 3);
         cricketScoreboard.hit(duck, Section.BULL, 4);
 
+        assertEquals(cricketScoreboard.getScore(duck), 25);
+        assertEquals(cricketScoreboard.getScore(rabbit), 0);
         assertEquals(cricketScoreboard.getWinner(), duck);
         assertNotSame(cricketScoreboard.getWinner(), rabbit);
 
