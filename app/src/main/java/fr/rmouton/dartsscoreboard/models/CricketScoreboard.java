@@ -40,8 +40,7 @@ public class CricketScoreboard extends Scoreboard {
 
     public CricketScoreboard(List<Player> players) {
         super(players);
-        scores = new SparseIntArray(players.size());
-        hitSections = new SparseArray<>(players.size());
+        newGame();
     }
 
     public void setCutThroat(boolean cutThroat) {
@@ -126,13 +125,14 @@ public class CricketScoreboard extends Scoreboard {
 
         for (int i = 0; i < count; i++) {
 
-            // current hits for thius section
+            // current hits for this section
             int currentSectionHit = playerHitSections.get(section);
 
             // Section already closed
             if (currentSectionHit == MAX_HIT_BY_SECTION) {
 
-                boolean allPlayerHaveClosedThisSection = true;
+                // If one player, allPlayerHaveClosedThisSection is always false
+                boolean allPlayerHaveClosedThisSection = players.size() > 1;
 
                 for (int j = 0; j < players.size(); j++) {
                     int playerId = players.keyAt(j);
@@ -189,4 +189,9 @@ public class CricketScoreboard extends Scoreboard {
         }
     }
 
+    @Override
+    protected void newGame() {
+        scores = new SparseIntArray(players.size());
+        hitSections = new SparseArray<>(players.size());
+    }
 }

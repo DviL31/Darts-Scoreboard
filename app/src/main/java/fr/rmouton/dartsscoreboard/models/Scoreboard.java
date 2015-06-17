@@ -56,4 +56,10 @@ public abstract class Scoreboard {
     protected void endParty(Player winner) {
 
     }
+
+    /**
+     * A new game starts, clear scoring but keep players
+     */
+    protected void newGame() {
+    }
 }

@@ -32,6 +32,8 @@ public class CricketScoreboardTest extends TestCase {
 
         assertEquals(cricketScoreboard.players.size(), players.size());
         assertNotNull(cricketScoreboard.scores);
+        assertEquals(cricketScoreboard.scores.size(), 0);
+        assertEquals(cricketScoreboard.hitSections.size(), 0);
         assertNotNull(cricketScoreboard.hitSections);
         assertNull(cricketScoreboard.getWinner());
         assertFalse(cricketScoreboard.isCutThroat());
@@ -170,6 +172,33 @@ public class CricketScoreboardTest extends TestCase {
         assertEquals(cricketScoreboard.getScore(duck), 0);
         assertEquals(cricketScoreboard.getScore(rabbit), 25);
         assertEquals(cricketScoreboard.getScore(pig), 75);
+
+    }
+
+    @Test
+    public void testNewGame() {
+        Player player = new Player();
+        List<Player> players = Arrays.asList(player);
+        CricketScoreboard cricketScoreboard = new CricketScoreboard(players);
+
+        assertEquals(cricketScoreboard.players.size(), players.size());
+        assertNotNull(cricketScoreboard.scores);
+        assertEquals(cricketScoreboard.scores.size(), 0);
+        assertEquals(cricketScoreboard.hitSections.size(), 0);
+        assertNotNull(cricketScoreboard.hitSections);
+        assertNull(cricketScoreboard.getWinner());
+        assertFalse(cricketScoreboard.isCutThroat());
+
+        cricketScoreboard.hit(player, Section.BULL, 4);
+        assertEquals(cricketScoreboard.scores.size(), 1);
+        assertEquals(cricketScoreboard.hitSections.get(player.id).get(Section.BULL).intValue(), 3);
+        assertEquals(cricketScoreboard.scores.get(player.id), 25);
+
+        cricketScoreboard.newGame();
+        assertEquals(cricketScoreboard.scores.size(), 0);
+        assertEquals(cricketScoreboard.scores.get(player.id), 0);
+        assertEquals(cricketScoreboard.hitSections.size(), 0);
+
 
     }
 }
