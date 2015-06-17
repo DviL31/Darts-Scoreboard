@@ -13,10 +13,13 @@ import java.util.List;
 public class CricketScoreboard extends Scoreboard {
 
     /**
-     * 3 hit must be done to close a section.
+     * 3 hits must be done to close a section.
      */
     private static final int MAX_HIT_BY_SECTION = 3;
 
+    /**
+     * All sections that must be hit to win a cricket darts game.
+     */
     private static final Section[] WINNING_SECTIONS = {Section.TWENTY, Section.NINETEEN,
             Section.EIGHTEEN, Section.SEVENTEEN, Section.SIXTEEN, Section.FIVETEEN, Section.BULL};
     /**

@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class Scoreboard {
 
     /**
-     * All players playing darts game.
+     * All players playing this darts game.
      */
     public SparseArray<Player> players;
 
@@ -27,6 +27,12 @@ public abstract class Scoreboard {
         }
     }
 
+    /**
+     * Retrieve a player with an id.
+     *
+     * @param playerId The player id
+     * @return A player with the playerId id
+     */
     public Player getPlayer(int playerId) {
         return players.get(playerId);
     }
@@ -50,8 +56,9 @@ public abstract class Scoreboard {
     }
 
     /**
-     * End this party
-     * @param winner
+     * The party is ended.
+     *
+     * @param winner The winner player.
      */
     protected void endParty(Player winner) {
 
